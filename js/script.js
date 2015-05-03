@@ -113,7 +113,23 @@ var ViewModel = function() {
 
   //this is not an object so don't use labels
   //query: ko.observable('');
+<<<<<<< HEAD
 
+=======
+  self.query = ko.observable('');
+  self.filterQuery = ko.observable('');
+    //credit to : http://opensoul.org/2011/06/23/live-search-with-knockoutjs/
+    self.search = function(value) {
+    // remove all the current beers, which removes them from the view
+    viewModel.markerArray.removeAll();
+
+    for(var x in markerArray) {
+      if(markerArray[x].name.toLowerCase().indexOf(value.toLowerCase()) >= 0) {
+        viewModel.markerArray.push(markerArray[x]);
+      }
+    }
+  };
+>>>>>>> origin/master
 
     //Initialize map location, set as IIFE to kick off immediately
   var initMap = function() {
