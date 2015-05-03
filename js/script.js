@@ -105,17 +105,20 @@ var markers = [
     }
 ];
 var markerArray = [];
-// This is a constructor. Convention dictates it should be named ViewModel instead of viewModel
-var ViewModel = function() {
+var viewModel = function() {
   var map, bounds;
 
   var self = this;
+<<<<<<< HEAD
 
   //this is not an object so don't use labels
   //query: ko.observable('');
 <<<<<<< HEAD
 
 =======
+=======
+  query: ko.observable('');
+>>>>>>> parent of 33cc484... fix issue with ViewModel instantiation
   self.query = ko.observable('');
   self.filterQuery = ko.observable('');
     //credit to : http://opensoul.org/2011/06/23/live-search-with-knockoutjs/
@@ -128,8 +131,12 @@ var ViewModel = function() {
         viewModel.markerArray.push(markerArray[x]);
       }
     }
+<<<<<<< HEAD
   };
 >>>>>>> origin/master
+=======
+  }
+>>>>>>> parent of 33cc484... fix issue with ViewModel instantiation
 
     //Initialize map location, set as IIFE to kick off immediately
   var initMap = function() {
@@ -192,7 +199,7 @@ var ViewModel = function() {
             var contentString = '<div id="player">' + '<iframe width="320" height="200" src="https://www.youtube.com/embed/'+title+'" frameborder="0" allowfullscreen></iframe>' + '</div>';
             var ytWindow = new google.maps.InfoWindow({
               content: contentString
-              });
+              })
             ytWindow.open(marker.get('map'), marker);
 
           });//closure for .getJSON
@@ -203,12 +210,6 @@ var ViewModel = function() {
 
 
 };
-/*
+
 ko.applyBindings(new viewModel());
-// you are trying to reference a method from the contructor when what you want to reference the method from an instantiated object
-viewModel.query.subscribe(viewModel.search);
-*/
-//instantiate the viewModel object from the ViewModel constructor
-var viewModel = new ViewModel();
-ko.applyBindings(viewModel);
 viewModel.query.subscribe(viewModel.search);
