@@ -16,100 +16,104 @@ var markers = [
       title: "Ramsis on the World",
       lat: 38.235616,
       lng:  -85.715553,
-      description: "grub"
+      description: "grub",
+      marker: ''
     },
     {
       title: "Molly Malone's",
       lat: 38.241760,
       lng: -85.725012,
-      description: "pub"
+      description: "pub",
+      marker: ''
     },
     {
       title: "Oshea's",
       lat: 38.240664,
       lng: -85.724904,
-      description: "pub"
+      description: "pub",
+      marker: ''
     },
     {
       title: "Wick's Pizza",
       lat: 38.240361,
       lng: -85.724346,
-      description: "grub"
+      description: "grub",
+      marker: ''
     },
     {
       title: "Nowhere Bar",
       lat: 38.237917,
       lng:  -85.719583,
-      description: "pub"
+      description: "pub",
+      marker: ''
     },
     {
       title: "Boombozz Pizza",
       lat: 38.231883,
       lng: -85.710034,
-      description: "grub"
+      description: "grub",
+      marker: ''
     },
     {
       title:  "Mark's Feed Store BBQ",
       lat: 38.231445,
       lng: -85.708532,
-      description: "grub"
+      description: "grub",
+      marker: ''
     },
     {
       title:  "Seviche",
       lat: 38.231175,
       lng: -85.707545,
-      description: "grub"
+      description: "grub",
+      marker: ''
     },
     {
       title:  "Cumberland Brewery",
       lat:  38.230729,
       lng:  -85.705389,
-      description: "pub"
+      description: "pub",
+      marker: ''
     },
     {
       title:  "Cafe Mimosa",
       lat:  38.231487,
       lng:  -85.706344,
-      description: "grub"
+      description: "grub",
+      marker: ''
     },
     {
       title:  "Palermo",
       lat:  38.234069,
       lng:  -85.712695,
-      description: "grub"
+      description: "grub",
+      marker: ''
     },
     {
       title:  "Bristol Bar",
       lat:  38.235241,
       lng:  -85.714041,
-      description: "pub"
+      description: "pub",
+      marker: ''
     },
     {
       title:  "Heine Brothers Coffee",
       lat:  38.237297,
       lng:  -85.719467,
-      description: "grub"
+      description: "grub",
+      marker: ''
     }
 ];
 var markerArray = [];
-var viewModel = function() {
+// This is a constructor. Convention dictates it should be named ViewModel instead of viewModel
+var ViewModel = function() {
   var map, bounds;
 
   var self = this;
-  query: ko.observable('');
-  self.query = ko.observable('');
-  self.filterQuery = ko.observable('');
-    //credit to : http://opensoul.org/2011/06/23/live-search-with-knockoutjs/
-    self.search = function(value) {
-    // remove all the current beers, which removes them from the view
-    viewModel.markerArray.removeAll();
 
-    for(var x in markerArray) {
-      if(markerArray[x].name.toLowerCase().indexOf(value.toLowerCase()) >= 0) {
-        viewModel.markerArray.push(markerArray[x]);
-      }
-    }
-  }
+  //this is not an object so don't use labels
+  //query: ko.observable('');
+
 
     //Initialize map location, set as IIFE to kick off immediately
   var initMap = function() {
@@ -172,19 +176,23 @@ var viewModel = function() {
             var contentString = '<div id="player">' + '<iframe width="320" height="200" src="https://www.youtube.com/embed/'+title+'" frameborder="0" allowfullscreen></iframe>' + '</div>';
             var ytWindow = new google.maps.InfoWindow({
               content: contentString
-              })
+              });
             ytWindow.open(marker.get('map'), marker);
 
-          }
-
-        );
-    });
+          });//closure for .getJSON
+    });//closure for google.maps.event.addListener
   }
 
   }();
 
 
 };
-
+/*
 ko.applyBindings(new viewModel());
+// you are trying to reference a method from the contructor when what you want to reference the method from an instantiated object
+viewModel.query.subscribe(viewModel.search);
+*/
+//instantiate the viewModel object from the ViewModel constructor
+var viewModel = new ViewModel();
+ko.applyBindings(viewModel);
 viewModel.query.subscribe(viewModel.search);
