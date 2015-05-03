@@ -114,11 +114,16 @@ var viewModel = function() {
   //this is not an object so don't use labels
   //query: ko.observable('');
 <<<<<<< HEAD
+<<<<<<< HEAD
 
 =======
 =======
   query: ko.observable('');
 >>>>>>> parent of 33cc484... fix issue with ViewModel instantiation
+=======
+
+  self.query = ko.observable;
+>>>>>>> parent of bcd56dd... remove duplicate line
   self.query = ko.observable('');
   self.filterQuery = ko.observable('');
     //credit to : http://opensoul.org/2011/06/23/live-search-with-knockoutjs/
