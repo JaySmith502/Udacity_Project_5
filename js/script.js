@@ -151,12 +151,7 @@ var ViewModel = function() {
       self.markerArray.push(marker);
       self.places.push(markers[i].title);
 
-      self.filterSubmit = ko.dependentObservable(function () {
-        var search = self.query().toLowerCase();
-        return ko.utils.arrayFilter(name, function (marker) {
-          return marker.toLowerCase().indexOf(search) >=0;
-        });
-      });
+
 //still need to work on infoWindow, put more content in
 //creates the window for each marker, just applies a generic youtube video at the moment, need to get it working with Ajax to supply video.
 
@@ -193,7 +188,7 @@ var ViewModel = function() {
 
     for (var i = 0; self.places().length; i++) {
 
-      var place = self.places()[i].name;
+      var place = self.places()[i].title;
       if(place.toLowerCase().indexOf(value.toLowerCase()) >= -0) {
         //need this line to set the searched marker back on map
       }
