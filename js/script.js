@@ -105,44 +105,14 @@ var markers = [
     }
 ];
 var markerArray = [];
-var viewModel = function() {
+var ViewModel = function() {
   var map, bounds;
 
   var self = this;
-<<<<<<< HEAD
 
-  //this is not an object so don't use labels
-  //query: ko.observable('');
-<<<<<<< HEAD
-<<<<<<< HEAD
-
-=======
-=======
-  query: ko.observable('');
->>>>>>> parent of 33cc484... fix issue with ViewModel instantiation
-=======
-
-  self.query = ko.observable;
->>>>>>> parent of bcd56dd... remove duplicate line
   self.query = ko.observable('');
   self.filterQuery = ko.observable('');
-    //credit to : http://opensoul.org/2011/06/23/live-search-with-knockoutjs/
-    self.search = function(value) {
-    // remove all the current beers, which removes them from the view
-    viewModel.markerArray.removeAll();
-
-    for(var x in markerArray) {
-      if(markerArray[x].name.toLowerCase().indexOf(value.toLowerCase()) >= 0) {
-        viewModel.markerArray.push(markerArray[x]);
-      }
-    }
-<<<<<<< HEAD
-  };
->>>>>>> origin/master
-=======
-  }
->>>>>>> parent of 33cc484... fix issue with ViewModel instantiation
-
+  self.places = ko.observableArray('');
     //Initialize map location, set as IIFE to kick off immediately
   var initMap = function() {
     //create map
@@ -174,12 +144,12 @@ var viewModel = function() {
         title: markers[i].title,
         animation: google.maps.Animation.DROP
       });
-
+      markers[i].marker = marker;
       bounds.extend(markPos);
-   //   map.fitBounds(bounds);
       map.setCenter(bounds.getCenter());
 
       self.markerArray.push(marker);
+      self.places.push(markers[i].title);
 
       self.filterSubmit = ko.dependentObservable(function () {
         var search = self.query().toLowerCase();
@@ -192,7 +162,8 @@ var viewModel = function() {
 
         var ytRequestTimeout = setTimeout(function(){
         console.log("failed to get Youtube resources");
-    }, 10000);
+        }, 10000);
+
         google.maps.event.addListener(marker, "click", function(){
           var yt_url = 'https://www.googleapis.com/youtube/v3/search?part=id&q=' + this.title + '+louisville&maxResults=1&callback=?&key=AIzaSyActmR_LWyXc0Y9CxHucYh-C73C09Om318';
           //make some room for youtube ajax call and supporting code here.
@@ -204,17 +175,35 @@ var viewModel = function() {
             var contentString = '<div id="player">' + '<iframe width="320" height="200" src="https://www.youtube.com/embed/'+title+'" frameborder="0" allowfullscreen></iframe>' + '</div>';
             var ytWindow = new google.maps.InfoWindow({
               content: contentString
-              })
+              });//closure for ytWindow
             ytWindow.open(marker.get('map'), marker);
-
           });//closure for .getJSON
-    });//closure for google.maps.event.addListener
-  }
+      });//closure for addListener
+    }//closure for for Loop setting Markers
 
-  }();
+  }();//closure for initMAP
 
+  self.search = function(value) {
 
-};
+    self.markerArray().forEach(function(marker) {
+      marker.setMap(null);
+    });
 
-ko.applyBindings(new viewModel());
+    self.places.removeAll();
+
+    for (var i = 0; self.places().length; i++) {
+
+      var place = self.places()[i].name;
+      if(place.toLowerCase().indexOf(value.toLowerCase()) >= -0) {
+        //need this line to set the searched marker back on map
+      }
+      else {
+        self.places.remove(place);
+      }
+    }
+  };//closure for self.search
+  self.query.subscribe(self.search);
+};//closure for ViewModel
+var viewModel = new ViewModel();
+ko.applyBindings(viewModel);
 viewModel.query.subscribe(viewModel.search);
