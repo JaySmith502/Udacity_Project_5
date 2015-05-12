@@ -153,7 +153,6 @@ var ViewModel = function() {
             }); //closure for addListener
         } //closure for for Loop setting Markers
 
-    }(); //closure for initMAP
 
     //try different filteredArray approach
     //credit to Johnathon with Udacity for one-on-one session to get me to this point, getting nowhere til he helped me see how this works
@@ -170,11 +169,15 @@ var ViewModel = function() {
         ko.utils.arrayForEach(newArray, function(marker) {
             if (marker.status === 'deleted') {
                 marker.value.setMap(null);
-            } else {
+            }
+            else {
                 marker.value.setMap(map);
             }
         }); //closuree for var newArray
-    });//closure for self.fileredArray.subscribe
+      });//closure for self.fileredArray.subscribe
+
+   }(); //closure for initMAP
+
 }; //closure for ViewModel
 var viewModel = new ViewModel();
 ko.applyBindings(viewModel);
