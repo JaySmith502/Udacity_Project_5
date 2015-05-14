@@ -1,181 +1,187 @@
-// JavaScript Document
-var locationData =
-[
-    {
-      title: "Ramsis on the World",
-      lat: 38.235616,
-      lng:  -85.715553,
-      description: "grub"
-    },
-    {
-      title: "Molly Malone's",
-      lat: 38.241760,
-      lng: -85.725012,
-      description: "pub"
-    },
-    {
-      title: "Oshea's",
-      lat: 38.240664,
-      lng: -85.724904,
-      description: "pub"
-    },
-    {
-      title: "Wick's Pizza",
-      lat: 38.240361,
-      lng: -85.724346,
-      description: "grub"
-    },
-    {
-      title: "Nowhere Bar",
-      lat: 38.237917,
-      lng:  -85.719583,
-      description: "pub"
-    },
-    {
-      title: "Impellizari's",
-      lat: 38.233569,
-      lng: -85.711901,
-      description: "grub"
-    },
-    {
-      title: "Boombozz Pizza",
-      lat: 38.231883,
-      lng: -85.710034,
-      description: "grub"
-    },
-    {
-      title:  "Mark's Feed Store BBQ",
-      lat: 38.231445,
-      lng: -85.708532,
-      description: "grub"
-    },
-    {
-      title:  "Seviche",
-      lat: 38.231175,
-      lng: -85.707545,
-      description: "grub"
-    },
-    {
-      title:  "Cumberland Brewery",
-      lat:  38.230729,
-      lng:  -85.705389,
-      description: "pub"
-    },
-    {
-      title:  "Cafe Mimosa",
-      lat:  38.231487,
-      lng:  -85.706344,
-      description: "grub"
-    },
-    {
-      title:  "Palermo",
-      lat:  38.234069,
-      lng:  -85.712695,
-      description: "grub"
-    },
-    {
-      title:  "Bristol Bar",
-      lat:  38.235241,
-      lng:  -85.714041,
-      description: "pub"
-    },
-    {
-      title:  "Heine Brothers Coffee",
-      lat:  38.237297,
-      lng:  -85.719467,
-      description: "grub"
-    }
-];
+//TODO: get infowindows to work when list is filtered
+//TODO: get infowindows to open on clicked marker instead of last marker in array
+//cleaned code using jsbeautifier.org
 
-var markersArray = ko.observableArray([]);
-locationData.forEach(populateMarkersArray);
+var markers = [{
+    title: "Ramsis on the World",
+    lat: 38.235616,
+    lng: -85.715553,
+    description: "grub",
+    marker: ''
+}, {
+    title: "Molly Malone's",
+    lat: 38.241760,
+    lng: -85.725012,
+    description: "pub",
+    marker: ''
+}, {
+    title: "Oshea's",
+    lat: 38.240664,
+    lng: -85.724904,
+    description: "pub",
+    marker: ''
+}, {
+    title: "Wick's Pizza",
+    lat: 38.240361,
+    lng: -85.724346,
+    description: "grub",
+    marker: ''
+}, {
+    title: "Nowhere Bar",
+    lat: 38.237917,
+    lng: -85.719583,
+    description: "pub",
+    marker: ''
+}, {
+    title: "Boombozz Pizza",
+    lat: 38.231883,
+    lng: -85.710034,
+    description: "grub",
+    marker: ''
+}, {
+    title: "Mark's Feed Store BBQ",
+    lat: 38.231445,
+    lng: -85.708532,
+    description: "grub",
+    marker: ''
+}, {
+    title: "Seviche",
+    lat: 38.231175,
+    lng: -85.707545,
+    description: "grub",
+    marker: ''
+}, {
+    title: "Cumberland Brewery",
+    lat: 38.230729,
+    lng: -85.705389,
+    description: "pub",
+    marker: ''
+}, {
+    title: "Cafe Mimosa",
+    lat: 38.231487,
+    lng: -85.706344,
+    description: "grub",
+    marker: ''
+}, {
+    title: "Palermo",
+    lat: 38.234069,
+    lng: -85.712695,
+    description: "grub",
+    marker: ''
+}, {
+    title: "Bristol Bar",
+    lat: 38.235241,
+    lng: -85.714041,
+    description: "pub",
+    marker: ''
+}, {
+    title: "Heine Brothers Coffee",
+    lat: 38.237297,
+    lng: -85.719467,
+    description: "grub",
+    marker: ''
+}];
+var markerArray = [];
+var contentString;
+var title;
+var ViewModel = function() {
+    var map, bounds;
 
-function populateMarkersArray(element) { //, index, array
-    markersArray.push(element);
-}
-var highlands = new google.maps.LatLng(38-235616,-85.715553);
-// Set up a google map
-var mapOptions = {
-        center: highlands,
-        zoom: 16,
-        mapTypeId: 'terrain',
-        panControl: false,
-        disableDefaultUI: true
-};
+    var self = this;
 
-var map = new google.maps.Map(document.getElementById('map-canvas'), mapOptions);
+    self.query = ko.observable('');
+    self.filterQuery = ko.observable('');
+    self.places = ko.observableArray('');
+    //Initialize map location, set as IIFE to kick off immediately
+    var initMap = function() {
+        //create map
+        var mapOptions = {
+            center: new google.maps.LatLng(38.235616, -85.715553),
+            zoom: 16,
+            mapTypeId: 'terrain',
+            panControl: false,
+            disableDefaultUI: true
+        };
 
-function initialize() {
-    locationData.forEach(loadMarkers);
+        map = new google.maps.Map(document.getElementById('map-canvas'), mapOptions);
 
-    var infowindow = new google.maps.InfoWindow();
-    var marker = new google.maps.Marker({
-        map: map,
-        anchorPoint: new google.maps.Point(0, -29)
-    });
+        bounds = new google.maps.LatLngBounds();
 
-    google.maps.event.addListener(function() {
-        infowindow.close();
-        marker.setVisible(false);
-        var place = autocomplete.getPlace();
-        if (!place.geometry) {
-            return;
-        }
+        //create the markerArray for markers to populate on creation
+        self.markerArray = ko.observableArray();
+        //add markers
+        for (var i = 0; i < markers.length; i++) {
+            var markPos = new google.maps.LatLng(
+                markers[i].lat,
+                markers[i].lng
+            );
+            yt_url = 'https://www.googleapis.com/youtube/v3/search?part=id&q=' + markers[i].title + '+louisville&maxResults=1&callback=?&key=AIzaSyActmR_LWyXc0Y9CxHucYh-C73C09Om318';
+            //this finally works, leave it alone!
+            var marker = new google.maps.Marker({
+                position: markPos,
+                map: map,
+                icon: 'images/marker.png',
+                title: markers[i].title,
+                animation: google.maps.Animation.DROP
+            });
+            markers[i].marker = marker;
+            bounds.extend(markPos);
+            map.setCenter(bounds.getCenter());
 
-  // If the place has a geometry, then present it on a map.
-
-        marker.setIcon(/** @type {google.maps.Icon} */({
-            url: place.icon,
-            size: new google.maps.Size(71, 71),
-            origin: new google.maps.Point(0, 0),
-            anchor: new google.maps.Point(17, 34),
-            scaledSize: new google.maps.Size(35, 35)
-        }));
-        marker.setPosition(place.geometry.location);
-        marker.setVisible(true);
+            self.markerArray.push(marker);
+            self.places.push(markers[i].title);
 
 
+            //still need to work on infoWindow, put more content in
+            //creates the window for each marker, just applies a generic youtube video at the moment, need to get it working with Ajax to supply video.
 
- infowindow.setContent('<div><strong>' + place.name + '</strong><br>' + address);
-        infowindow0.open(map, marker0);
-    });
-
-}
-
-google.maps.event.addDomListener(window, 'load', initialize);
-
-function loadMarkers(element) { //, index, array
-    var myLatlng = new google.maps.LatLng(element.lat,element.long);
-    var marker = new google.maps.Marker({
-        position: myLatlng,
-        map: map,
-        title: element.name
-    });
-    loadInfoWindow(element, marker);
-}
-
-function loadInfoWindow(element, marker) {
-    var contentString = '<div class="strong"><a href="' + element.url + '" target="_blank">' + element.name + '</a></div><div>' + element.add1 + '</div><div>' + element.add2 + '</div><div>'+ element.phone + '</div>';
-    var infowindow = new google.maps.InfoWindow({
-      content: contentString
-    });
-    google.maps.event.addListener(marker, 'click', function() {
-        infowindow.open(map,marker);
-        toggleBounce(marker);
-    });
-}
-
- function toggleBounce(marker) {
-    if (marker.getAnimation() != null) {
-        marker.setAnimation(null);
-    } else {
-        marker.setAnimation(google.maps.Animation.BOUNCE);
-    }
-}
+            var ytRequestTimeout = setTimeout(function() {
+                console.log("failed to get Youtube resources");
+            }, 10000);
 
 
-function viewModel() {
+            google.maps.event.addListener(marker, "click", function() {
+                infowindow.open(map, marker)
+            });
+
+            $.getJSON(yt_url, function(response) {
+                  console.log(response);
+                  name = response.items[0].id.videoId;
+                }); //closure for .getJSON
+                contentString = '<div id="player">' + '<iframe width="320" height="200" src="https://www.youtube.com/embed/' + name + '" frameborder="0" allowfullscreen></iframe>' + '</div>';
+
+        };
+
+            infowindow = new google.maps.InfoWindow({
+                content: contentString
+            });
+         //closure for for Loop setting Markers
 
 
-  }
-  ko.applyBindings(new viewModel());
+    //try different filteredArray approach
+    //credit to Johnathon with Udacity for one-on-one session to get me to this point, getting nowhere til he helped me see how this works
+    self.filteredArray = ko.computed(function() {
+        return ko.utils.arrayFilter(self.markerArray(), function(marker) {
+            return marker.title.toLowerCase().indexOf(self.query().toLowerCase()) !== -1;
+        });
+    }, self);//closure for self.filteredArray
+
+    //use variant 3 of ko utility arrays function from knockout.js documentation
+    //still a little buggy, accepts any letter in the name of the restaurant, but works by the third letter anyway so I'm moving on! ;)
+    self.filteredArray.subscribe(function() {
+        var newArray = ko.utils.compareArrays(self.markerArray(), self.filteredArray());
+        ko.utils.arrayForEach(newArray, function(marker) {
+            if (marker.status === 'deleted') {
+                marker.value.setMap(null);
+            }
+            else {
+                marker.value.setMap(map);
+            }
+        }); //closuree for var newArray
+      });//closure for self.fileredArray.subscribe
+
+   }(); //closure for initMAP
+
+}; //closure for ViewModel
+var viewModel = new ViewModel();
+ko.applyBindings(viewModel);
