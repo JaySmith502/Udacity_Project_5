@@ -132,25 +132,28 @@ var ViewModel = function() {
             //still need to work on infoWindow, put more content in
             //creates the window for each marker, just applies a generic youtube video at the moment, need to get it working with Ajax to supply video.
 
-            var ytRequestTimeout = setTimeout(function() {
-                console.log("failed to get Youtube resources");
-            }, 10000);
+            google.maps.event.addListener(marker, "click", function(marker) {
+                return function(){
 
-            google.maps.event.addListener(marker, "click", function() {
                 var yt_url = 'https://www.googleapis.com/youtube/v3/search?part=id&q=' + this.title + '+louisville&maxResults=1&callback=?&key=AIzaSyActmR_LWyXc0Y9CxHucYh-C73C09Om318';
                 //make some room for youtube ajax call and supporting code here.
                 $.getJSON(yt_url, function(response) {
                     console.log(response);
                     var title = response.items[0].id.videoId;
+                    var contentString = '<div id="player">' + '<iframe width="320" height="200" src="https://www.youtube.com/embed/' + title + '" frameborder="0" allowfullscreen></iframe>' + '</div>';
+                    infowindow = new google.maps.InfoWindow({
+                    content: contentString
+                    });
                     //var playerUrl = 'src="https://www.youtube.com/embed/' + title + '"';
                     //$player.append(playerUrl);
-                    var contentString = '<div id="player">' + '<iframe width="320" height="200" src="https://www.youtube.com/embed/' + title + '" frameborder="0" allowfullscreen></iframe>' + '</div>';
-                    var ytWindow = new google.maps.InfoWindow({
-                        content: contentString
-                    }); //closure for ytWindow
-                    ytWindow.open(marker.get('map'), marker);
+
+                    infowindow.setContent(contentString);
+                    map.panTo(marker.getPosition());
+                    infowindow.open(map, marker);
+
                 }); //closure for .getJSON
-            }); //closure for addListener
+                }//closure for return function
+            }(marker)) //closure for addListener
         } //closure for for Loop setting Markers
 
 

@@ -137,20 +137,23 @@ var ViewModel = function() {
 
             var ytRequestTimeout = setTimeout(function() {
                 console.log("failed to get Youtube resources");
-            }, 10000);
+            }, 10000);//closure for setTimeout
 
 
-            google.maps.event.addListener(marker, "click", function() {
+            google.maps.event.addListener(marker, "click", function(marker) {
+                return function() {
+                infowindow.setContent(contentString);
+                map.panTo(marker.getPosition());
                 infowindow.open(map, marker)
-            });
+                }
+            }(marker));//closure for 'click'
 
             $.getJSON(yt_url, function(response) {
                   console.log(response);
                   name = response.items[0].id.videoId;
                 }); //closure for .getJSON
                 contentString = '<div id="player">' + '<iframe width="320" height="200" src="https://www.youtube.com/embed/' + name + '" frameborder="0" allowfullscreen></iframe>' + '</div>';
-
-        };
+            };//closure
 
             infowindow = new google.maps.InfoWindow({
                 content: contentString
