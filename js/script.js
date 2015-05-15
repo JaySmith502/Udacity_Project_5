@@ -1,6 +1,7 @@
-//TODO: get infowindows to work when list is filtered
-//TODO: get infowindows to open on clicked marker instead of last marker in array
-//cleaned code using jsbeautifier.org
+//TODO: get infowindows to work when list is filtered--RESOLVED
+//TODO: get infowindows to open on clicked marker instead of last marker in array--RESOLVED
+//TODO: work on responsiveness across browsers/devices (remove list for smaller/center search bar)
+//TODO: beautify the listview a little, it's kinda ugly
 
 var markers = [{
     title: "Ramsis on the World",
