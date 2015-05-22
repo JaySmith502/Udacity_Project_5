@@ -9,9 +9,9 @@
    </head>
    <body>
       <form id="search-form"><!-- data-bind="submit: filterSubmit">-->
-      <input placeholder="Search from List" type="search" data-bind="value: query, valueUpdate: 'keyup'" autocomplete="off" class="search-bar" id="choice">
+      <input placeholder="Search from Places" type="search" data-bind="value: query, valueUpdate: 'keyup'" autocomplete="off" class="search-bar" id="choice">
       <!--   <input data-bind="value: filterQuery" class="search-bar" placeholder="PUB OR GRUB?" type="text" id="choice" value"">-->
-      <button class="search-submit" type="submit"><span>Submit</span></button>
+      <button class="search-submit" type="submit"><span>Reset</span></button>
       </form>
       <div id="pointList">
          <ul data-bind="foreach: filteredArray">

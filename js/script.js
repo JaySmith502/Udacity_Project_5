@@ -2,7 +2,7 @@
 //TODO: get infowindows to open on clicked marker instead of last marker in array--RESOLVED
 //TODO: work on responsiveness across browsers/devices (remove list for smaller/center search bar)
 //TODO: beautify the listview a little, it's kinda ugly
-
+//list of places for markers to be iterated through to create markers on map.  Added "grub" and "pub" for functionality in future iterations to be searchable by food or drink
 var markers = [{
     title: "Ramsis on the World",
     lat: 38.235616,
@@ -82,7 +82,12 @@ var markers = [{
     description: "grub",
     marker: ''
 }];
+//create the markerArray array for items to push to later
 var markerArray = [];
+var iconMain = 'images/marker.png';
+var iconHover = 'images/marker2.png';
+
+//ViewModel for creation of the map object, encapsulates the entire js code and is called at end with the Knockout call.
 var ViewModel = function() {
     var map, bounds;
 
@@ -92,11 +97,12 @@ var ViewModel = function() {
     self.filterQuery = ko.observable('');
     self.places = ko.observableArray('');
     //Initialize map location, set as IIFE to kick off immediately
+
     var initMap = function() {
         //create map
         var mapOptions = {
             center: new google.maps.LatLng(38.235616, -85.715553),
-            zoom: 16,
+            zoom: 14,
             mapTypeId: 'terrain',
             panControl: false,
             disableDefaultUI: true
@@ -108,79 +114,99 @@ var ViewModel = function() {
 
         //create the markerArray for markers to populate on creation
         self.markerArray = ko.observableArray();
-        //add markers
+        //add markers by running through the array above
         for (var i = 0; i < markers.length; i++) {
             var markPos = new google.maps.LatLng(
                 markers[i].lat,
                 markers[i].lng
             );
-            //this finally works, leave it alone!
+            //this finally works, leave it alone! creates the marker object
             var marker = new google.maps.Marker({
                 position: markPos,
                 map: map,
-                icon: 'images/marker.png',
+                icon: iconMain,
                 title: markers[i].title,
+                id: 'markers',
                 animation: google.maps.Animation.DROP
             });
+            //create a marker object after being run through the for loop
             markers[i].marker = marker;
             bounds.extend(markPos);
             map.setCenter(bounds.getCenter());
-
+            //adds markers to the markerArray array after created
             self.markerArray.push(marker);
+            //adds marker to the places list (didn't end up using for this project but would be useful down the road)
             self.places.push(markers[i].title);
 
 
             //still need to work on infoWindow, put more content in
             //creates the window for each marker, just applies a generic youtube video at the moment, need to get it working with Ajax to supply video.
+            google.maps.event.addListener(marker, 'mouseover', function(){
+                var marker = this;
+                if (this.icon == iconHover) {
+                    this.setIcon(iconMain)
+                }
+                else {this.setIcon(iconHover)}
+            });
 
+            //several attempts to take the getJSON and Youtube objects out of the marker addListener were fruitless, leaving it alone for this project
             google.maps.event.addListener(marker, "click", function(marker) {
-                return function(){
+                return function() {
+                        marker.setIcon('images/marker2.png');
+                        //the actual url that is used in the JSON object to request info from the Youtube API, creates the specific marker request with this.title, pulling the title from
+                        //the marker list of the place being searched and inserting it into a generic Youtube video request, could be much more specific, but does work for purposes of this project
+                        var yt_url = 'https://www.googleapis.com/youtube/v3/search?part=id&q=' + this.title + '+louisville&maxResults=1&callback=?&key=AIzaSyActmR_LWyXc0Y9CxHucYh-C73C09Om318';
+                        //make some room for youtube ajax call and supporting code here.
+                        $.getJSON(yt_url, function(response) {
+                            //ensure something returns from Youtube
+                            console.log(response);
+                            //create the title for the youtube url from the API response
+                            var title = response.items[0].id.videoId;
+                            //create the infoWindow content using the Youtube iFrame Player object researched on Google Developers Console
+                            var contentString = '<div id="player">' + '<iframe width="320" height="200" src="https://www.youtube.com/embed/' + title + '" frameborder="0" allowfullscreen></iframe>' + '</div>';
+                            infowindow = new google.maps.InfoWindow({
+                                content: contentString
+                            });
+                            //var playerUrl = 'src="https://www.youtube.com/embed/' + title + '"';
+                            //$player.append(playerUrl);
 
-                var yt_url = 'https://www.googleapis.com/youtube/v3/search?part=id&q=' + this.title + '+louisville&maxResults=1&callback=?&key=AIzaSyActmR_LWyXc0Y9CxHucYh-C73C09Om318';
-                //make some room for youtube ajax call and supporting code here.
-                $.getJSON(yt_url, function(response) {
-                    console.log(response);
-                    var title = response.items[0].id.videoId;
-                    var contentString = '<div id="player">' + '<iframe width="320" height="200" src="https://www.youtube.com/embed/' + title + '" frameborder="0" allowfullscreen></iframe>' + '</div>';
-                    infowindow = new google.maps.InfoWindow({
-                    content: contentString
-                    });
-                    //var playerUrl = 'src="https://www.youtube.com/embed/' + title + '"';
-                    //$player.append(playerUrl);
+                            infowindow.setContent(contentString);
+                            //center the map on the clicked marker
+                            map.panTo(marker.getPosition());
+                            infowindow.open(map, marker);
 
-                    infowindow.setContent(contentString);
-                    map.panTo(marker.getPosition());
-                    infowindow.open(map, marker);
-
-                }); //closure for .getJSON
-                }//closure for return function
-            }(marker)) //closure for addListener
+                        }); //closure for .getJSON
+                    } //closure for return function
+            }(marker)); //closure for addListener
+            google.maps.event.addListener(marker, 'closeclick', function(marker) {
+                marker.setIcon('images/marker.png');
+            }(marker));
         } //closure for for Loop setting Markers
 
 
-    //try different filteredArray approach
-    //credit to Johnathon with Udacity for one-on-one session to get me to this point, getting nowhere til he helped me see how this works
-    self.filteredArray = ko.computed(function() {
-        return ko.utils.arrayFilter(self.markerArray(), function(marker) {
-            return marker.title.toLowerCase().indexOf(self.query().toLowerCase()) !== -1;
-        });
-    }, self);//closure for self.filteredArray
+        //function to create search function, option 3 on knockout.js tutorials using filteredArray function
 
-    //use variant 3 of ko utility arrays function from knockout.js documentation
-    //still a little buggy, accepts any letter in the name of the restaurant, but works by the third letter anyway so I'm moving on! ;)
-    self.filteredArray.subscribe(function() {
-        var newArray = ko.utils.compareArrays(self.markerArray(), self.filteredArray());
-        ko.utils.arrayForEach(newArray, function(marker) {
-            if (marker.status === 'deleted') {
-                marker.value.setMap(null);
-            }
-            else {
-                marker.value.setMap(map);
-            }
-        }); //closuree for var newArray
-      });//closure for self.fileredArray.subscribe
+        //credit to Johnathon with Udacity for one-on-one session to get me to this point, getting nowhere til he helped me see how this works
+        self.filteredArray = ko.computed(function() {
+            return ko.utils.arrayFilter(self.markerArray(), function(marker) {
+                return marker.title.toLowerCase().indexOf(self.query().toLowerCase()) !== -1;
+            });
+        }, self); //closure for self.filteredArray
 
-   }(); //closure for initMAP
+        //use variant 3 of ko utility arrays function from knockout.js documentation
+        //still a little buggy, accepts any letter in the name of the restaurant, but works by the third letter anyway so I'm moving on! ;)
+        self.filteredArray.subscribe(function() {
+            var newArray = ko.utils.compareArrays(self.markerArray(), self.filteredArray());
+            ko.utils.arrayForEach(newArray, function(marker) {
+                if (marker.status === 'deleted') {
+                    marker.value.setMap(null);
+                } else {
+                    marker.value.setMap(map);
+                }
+            }); //closuree for var newArray
+        }); //closure for self.fileredArray.subscribe
+
+    }(); //closure for initMAP
 
 }; //closure for ViewModel
 var viewModel = new ViewModel();

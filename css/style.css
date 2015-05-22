@@ -1,3 +1,4 @@
+@media (min-width: 451px) and (max-width: 1800px) {
 
 html {
   height: 100%
@@ -8,8 +9,14 @@ body {
   padding: 0
 }
 
+li:hover {
+  background-color: black;
+  color: white;
+}
+
 .player {
  -webkit-transform:translate3d(0,0,0);
+ z-index: 9999;
 }
 
 #map-canvas {
@@ -21,7 +28,7 @@ body {
   position: fixed;
   top: 30px;
   right: 25px;
-  z-index: 9999;
+  z-index: 8999;
   background: rgba(0,0,0,0.25);
   padding: 20px;
   height: 55px;
@@ -61,8 +68,67 @@ body {
   border-color: rgba(0,0,0,0.25);
   opacity: .95;
   display: inline-block;
-  z-index: 9999;
+  z-index: 8999;
   overflow: auto;
+  }
 }
 
+@media (min-width: 1px) and (max-width: 450px) {
+  #pointlist {
+    display: none;
+  }
+
+  ul li {
+    display: none;
+  }
+
+  html {
+    height: 100%
+  }
+  body {
+    height: 100%;
+    margin: 0;
+    padding: 0
+  }
+
+  .player {
+    -webkit-transform:translate3d(0,0,0);
+    z-index: 9999;
+  }
+
+  #map-canvas {
+    height: 100%;
+    z-index: 0001
+  }
+
+  #search-form {
+    position: fixed;
+    bottom: 30px;
+    right: 25px;
+    z-index: 8999;
+    background: rgba(0,0,0,0.25);
+    padding: 20px;
+    height: 55px;
+    display: flex;
+    flex-wrap: wrap;
+    border-radius: 10px;
+  }
+  .search-bar {
+    padding: 5px 8px;
+    width: 233px;
+    border-radius: 10px;
+  }
+
+  .search-submit {
+    margin-left: 8px;
+    padding: 8px 13px;
+    background: #333;
+    color: white;
+    background-color: red;
+    font-size: 14px;
+    font-weight: bold;
+    border: solid black 2px;
+  }
+
+}
 /*needs some work, but raw css for search background-repeat */
