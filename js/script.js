@@ -86,6 +86,7 @@ var markers = [{
 var markerArray = [];
 var iconMain = 'images/marker.png';
 var iconHover = 'images/marker2.png';
+var center;
 
 //ViewModel for creation of the map object, encapsulates the entire js code and is called at end with the Knockout call.
 var ViewModel = function() {
@@ -141,20 +142,40 @@ var ViewModel = function() {
 
             //still need to work on infoWindow, put more content in
             //creates the window for each marker, just applies a generic youtube video at the moment, need to get it working with Ajax to supply video.
-            google.maps.event.addListener(marker, 'click', function(){
+            google.maps.event.addListener(marker, 'click', function() {
                 var marker = this;
                 if (this.icon == iconHover) {
                     this.setIcon(iconMain)
-                }
-                else if (this.icon == iconMain) {
+                } else if (this.icon == iconMain) {
                     this.setIcon(iconHover)
                 }
             });
+            //function to resize map when resizing to smaller window, credit to Gregory Bolkenstijn on StackOverflow for this function-http://stackoverflow.com/questions/8792676/center-google-maps-v3-on-browser-resize-responsive
+            function calculateCenter() {
+                center = map.getCenter();
+            }
+            google.maps.event.addDomListener(map, 'idle', function() {
+                calculateCenter();
+            });
+            google.maps.event.addDomListener(window, 'resize', function() {
+                map.setCenter(center);
+            });
+            //function credit to developers.google.com/maps/documentation/javascript/examples/marker-animations
+            function toggleBounce() {
+
+            if (marker.getAnimation() != null) {
+            marker.setAnimation(null);
+            } else {
+            marker.setAnimation(google.maps.Animation.BOUNCE);
+                }
+            }
+
+            //google.maps.event.addListener(marker, 'click', toggleBounce(marker));
 
             //several attempts to take the getJSON and Youtube objects out of the marker addListener were fruitless, leaving it alone for this project
             google.maps.event.addListener(marker, "click", function(marker) {
+                var self = this;
                 return function() {
-                        marker.setIcon('images/marker2.png');
                         //the actual url that is used in the JSON object to request info from the Youtube API, creates the specific marker request with this.title, pulling the title from
                         //the marker list of the place being searched and inserting it into a generic Youtube video request, could be much more specific, but does work for purposes of this project
                         var yt_url = 'https://www.googleapis.com/youtube/v3/search?part=id&q=' + this.title + '+louisville&maxResults=1&callback=?&key=AIzaSyActmR_LWyXc0Y9CxHucYh-C73C09Om318';
