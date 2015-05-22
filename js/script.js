@@ -141,12 +141,14 @@ var ViewModel = function() {
 
             //still need to work on infoWindow, put more content in
             //creates the window for each marker, just applies a generic youtube video at the moment, need to get it working with Ajax to supply video.
-            google.maps.event.addListener(marker, 'mouseover', function(){
+            google.maps.event.addListener(marker, 'click', function(){
                 var marker = this;
                 if (this.icon == iconHover) {
                     this.setIcon(iconMain)
                 }
-                else {this.setIcon(iconHover)}
+                else if (this.icon == iconMain) {
+                    this.setIcon(iconHover)
+                }
             });
 
             //several attempts to take the getJSON and Youtube objects out of the marker addListener were fruitless, leaving it alone for this project
@@ -178,9 +180,7 @@ var ViewModel = function() {
                         }); //closure for .getJSON
                     } //closure for return function
             }(marker)); //closure for addListener
-            google.maps.event.addListener(marker, 'closeclick', function(marker) {
-                marker.setIcon('images/marker.png');
-            }(marker));
+
         } //closure for for Loop setting Markers
 
 
