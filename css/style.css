@@ -1,4 +1,4 @@
-@media (min-width: 451px) and (max-width: 3000px) {
+@media (min-width: 500px) and (max-width: 3000px) {
 
 html {
   height: 100%
@@ -73,7 +73,7 @@ li:hover {
   }
 }
 
-@media (min-width: 1px) and (max-width: 450px) {
+@media (min-width: 1px) and (max-width: 499px) {
   #pointlist {
     display: none;
   }
@@ -113,7 +113,7 @@ li:hover {
     flex-wrap: wrap;
     border-radius: 10px;
     margin: 0 12 12 12;
-    min-width: 320px;
+    /*min-width: 320px;*/
   }
   .search-bar {
     padding: 5px 8px;

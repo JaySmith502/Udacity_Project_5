@@ -1,7 +1,8 @@
 //TODO: get infowindows to work when list is filtered--RESOLVED
 //TODO: get infowindows to open on clicked marker instead of last marker in array--RESOLVED
-//TODO: work on responsiveness across browsers/devices (remove list for smaller/center search bar)
-//TODO: beautify the listview a little, it's kinda ugly
+//TODO: work on responsiveness across browsers/devices (remove list for smaller/center search bar)--RESOLVED
+//TODO: Figure out how to close InfoWindows when another marker clicked
+//TODO: Get markers to respond when list item is clicked
 //list of places for markers to be iterated through to create markers on map.  Added "grub" and "pub" for functionality in future iterations to be searchable by food or drink
 var markers = [{
     title: "Ramsis on the World",
@@ -140,8 +141,6 @@ var ViewModel = function() {
             self.places.push(markers[i].title);
 
 
-            //still need to work on infoWindow, put more content in
-            //creates the window for each marker, just applies a generic youtube video at the moment, need to get it working with Ajax to supply video.
             google.maps.event.addListener(marker, 'click', function() {
                 var marker = this;
                 if (this.icon == iconHover) {
@@ -150,6 +149,7 @@ var ViewModel = function() {
                     this.setIcon(iconHover)
                 }
             });
+
             //function to resize map when resizing to smaller window, credit to Gregory Bolkenstijn on StackOverflow for this function-http://stackoverflow.com/questions/8792676/center-google-maps-v3-on-browser-resize-responsive
             function calculateCenter() {
                 center = map.getCenter();
@@ -175,6 +175,7 @@ var ViewModel = function() {
             //several attempts to take the getJSON and Youtube objects out of the marker addListener were fruitless, leaving it alone for this project
             google.maps.event.addListener(marker, "click", function(marker) {
                 var self = this;
+
                 return function() {
                         //the actual url that is used in the JSON object to request info from the Youtube API, creates the specific marker request with this.title, pulling the title from
                         //the marker list of the place being searched and inserting it into a generic Youtube video request, could be much more specific, but does work for purposes of this project
@@ -225,7 +226,11 @@ var ViewModel = function() {
                     marker.value.setMap(map);
                 }
             }); //closuree for var newArray
-        }); //closure for self.fileredArray.subscribe
+        }); //closure for self.filteredArray.subscribe
+          //Highlight map marker if list item is clicked.
+            self.selectItem = function(listItem) {
+            google.maps.event.trigger(listItem, 'click');
+            };
 
     }(); //closure for initMAP
 
