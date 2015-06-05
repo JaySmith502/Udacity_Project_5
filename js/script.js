@@ -1,11 +1,3 @@
-//TODO LIST FOR FIRST REVIEW OF UDACITY INSTRUCTORS ITEMS THAT NEED TO BE ADDRESSED
-//TODO: infowindows need to only allow one open at a time COMPLETEDCOMPLETEDCOMPLETEDCOMPLETEDCOMPLETEDCOMPLETEDCOMPLETEDCOMPLETEDCOMPLETED
-//TODO: listview needs to center map on marker and open video on click COMPLETEDCOMPLETEDCOMPLETEDCOMPLETEDCOMPLETEDCOMPLETEDCOMPLETED
-//TODO: use Offline.js to handle internet disruptions COMPLETEDCOMPLETEDCOMPLETEDCOMPLETEDCOMPLETEDCOMPLETEDCOMPLETEDCOMPLETED
-//TODO: install Bootstrap framework and get responsiveness COMPLETEDCOMPLETEDCOMPLETEDCOMPLETEDCOMPLETEDCOMPLETEDCOMPLETEDCOMPLETED
-//TODO: run code through JSHint and check Javascript Style Guide (remove trailing white spaces and fix semicolons)
-//TODO: create error handler for Youtube API
-//TODO: address code review comments
 var markers = [{
     title: "Ramsi's on the World",
     lat: 38.235616,
