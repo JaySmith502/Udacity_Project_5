@@ -1,45 +1,37 @@
 <!DOCTYPE html>
 <html lang="en">
-   <head>
-      <meta charset="UTF-8">
-      <meta name="viewport" content="width=device-width, initial-scale=1" user-scalable="no">
-      <meta http-equiv="X-UA-Compatible" content="IE=edge">
-      <link rel="stylesheet" href="css/normalize.css">
-      <link rel="stylesheet" href="css/bootstrap.min.css">
-      <link rel="stylesheet" href="css/style.css">
-      <link rel="stylesheet" href="css/offline-theme-slide.css">
-      <link rel="stylesheet" href="css/offline-language-english-indicator.css">
 
-      <title>Highlands Neighborhood Map | Udacity Project 5</title>
-   </head>
-   <body>
- <!--  <div class="container-fluid">  -->
- <!--  <div class="row" id="map-canvas">
- <!--  <div class"row">  -->
-      <form id="search-form">
-      <input placeholder="Search from Places" type="search" data-bind="value: query, valueUpdate: 'keyup'" autocomplete="off" class="search-bar" id="choice">
-      <button class="search-submit" type="submit"><span>Reset</span></button>
-      </form>
-<!--  </div>  -->
-<!--  <div class="row">  -->
-      <div id="pointList">
-         <ul data-bind="foreach: filteredArray">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1" user-scalable="no">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <link rel="stylesheet" href="css/normalize.css">
+    <link rel="stylesheet" href="css/bootstrap.min.css">
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/offline-theme-slide.css">
+    <link rel="stylesheet" href="css/offline-language-english-indicator.css">
+
+    <title>Highlands Neighborhood Map | Udacity Project 5</title>
+</head>
+
+<body>
+    <form id="search-form">
+        <input placeholder="Search from Places" type="search" data-bind="value: query, valueUpdate: 'keyup'" autocomplete="off" class="search-bar" id="choice">
+        <button class="search-submit" type="submit"><span>Reset</span></button>
+    </form>
+    <div id="pointList">
+        <ul data-bind="foreach: filteredArray">
             <li><span data-bind="text: title, click: $parent.selectItem"></span></li>
-         </ul>
-      </div>
-<!--  </div>  -->
-<!--  <div id="row"> -->
-      <div id="map-canvas"></div>
-<!--  </div>  -->
-      <script src="js/offline.js"></script>
-      <script src="js/jquery.min.js"></script>
-      <script src="js/knockout.js"></script>
-      <script src="https://apis.google.com/js/client.js?onload=OnLoadCallback"></script>
-      <script src="http://maps.googleapis.com/maps/api/js?v=3&key=AIzaSyActmR_LWyXc0Y9CxHucYh-C73C09Om318"></script>
-      <script src="js/auth.js"></script>
-      <script src="js/script.js"></script>
-<!--  </div map-canvas>  -->
-<!--  </div container>  -->
+        </ul>
+    </div>
+    <div id="map-canvas"></div>
+    <script src="js/offline.js"></script>
+    <script src="js/jquery.min.js"></script>
+    <script src="js/knockout.js"></script>
+    <script src="https://apis.google.com/js/client.js?onload=OnLoadCallback"></script>
+    <script src="http://maps.googleapis.com/maps/api/js?v=3&key=AIzaSyActmR_LWyXc0Y9CxHucYh-C73C09Om318"></script>
+    <script src="js/auth.js"></script>
+    <script src="js/script.js"></script>
+</body>
 
-   </body>
 </html>

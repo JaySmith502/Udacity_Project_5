@@ -1,149 +1,150 @@
 @media (min-width: 500px) and (max-width: 3000px) {
 
-html {
-  height: 100%
-}
-body {
-  height: 100%;
-  margin: 0;
-  padding: 0
-}
+    html {
+        height: 100%;
+    }
 
-li:hover {
-  background-color: black;
-  color: white;
-}
+    body {
+        height: 100%;
+        margin: 0;
+        padding: 0;
+    }
 
-.player {
- -webkit-transform:translate3d(0,0,0);
- z-index: 9999;
-}
+    li:hover {
+        background-color: black;
+        color: white;
+    }
 
-#map-canvas {
-  height: 100%;
-  z-index: 0001
-}
+    .player {
+        -webkit-transform: translate3d(0,0,0);
+        z-index: 9999;
+    }
 
-#search-form {
-  position: fixed;
-  top: 30px;
-  right: 25px;
-  z-index: 8999;
-  background: rgba(0,0,0,0.25);
-  padding: 10px;
-  height: 55px;
-  display: flex;
-  flex-wrap: wrap;
-  border-radius: 10px;
-}
-.search-bar {
-  padding: 5px 8px;
-  width: 233px;
-  border-radius: 10px;
-}
+    #map-canvas {
+        height: 100%;
+        z-index: 0001;
+    }
 
-.search-submit {
-  margin-left: 8px;
-  padding: 8px 13px;
-  background: #333;
-  color: white;
-  background-color: red;
-  font-size: 14px;
-  font-weight: bold;
-  border: solid black 2px;
-}
+    #search-form {
+        position: fixed;
+        top: 30px;
+        right: 25px;
+        z-index: 8999;
+        background: rgba(0,0,0,0.25);
+        padding: 10px;
+        height: 55px;
+        display: flex;
+        flex-wrap: wrap;
+        border-radius: 10px;
+    }
 
-#pointList {
-  position: fixed;
-  left: 10px;
-  top: 30px;
-  width: 20%;
-  min-width: 200px;
-  height: 35%;
-  background-color: red;
-  color: black;
-  font-size: 1.2em;
-  border-radius: 15px;
-  border: 5px;
-  border-color: rgba(0,0,0,0.25);
-  opacity: .95;
-  display: inline-block;
-  z-index: 8999;
-  overflow: auto;
-  }
+    .search-bar {
+        padding: 5px 8px;
+        width: 233px;
+        border-radius: 10px;
+    }
+
+    .search-submit {
+        margin-left: 8px;
+        padding: 8px 13px;
+        background: #333;
+        color: white;
+        background-color: red;
+        font-size: 14px;
+        font-weight: bold;
+        border: solid black 2px;
+    }
+
+    #pointList {
+        position: fixed;
+        left: 10px;
+        top: 30px;
+        width: 20%;
+        min-width: 200px;
+        height: 35%;
+        background-color: red;
+        color: black;
+        font-size: 1.2em;
+        border-radius: 15px;
+        border: 5px;
+        border-color: rgba(0,0,0,0.25);
+        opacity: .95;
+        display: inline-block;
+        z-index: 8999;
+        overflow: auto;
+    };
 }
 
 @media (min-width: 1px) and (max-width: 499px) {
-  #pointList {
-  position: fixed;
-  bottom: 0px;
-  width: 100%;
-  height: 20%;
-  background-color: red;
-  color: black;
-  font-size: 1.2em;
-  border: 5px;
-  border-color: rgba(0,0,0,0.25);
-  opacity: .95;
-  display: block;
-  z-index: 8999;
-  overflow: auto;
-  }
+    #pointList {
+        position: fixed;
+        bottom: 0px;
+        width: 100%;
+        height: 20%;
+        background-color: red;
+        color: black;
+        font-size: 1.2em;
+        border: 5px;
+        border-color: rgba(0,0,0,0.25);
+        opacity: .95;
+        display: block;
+        z-index: 8999;
+        overflow: auto;
+    }
 
-  li:hover {
-  background-color: black;
-  color: white;
-  }
+    li:hover {
+        background-color: black;
+        color: white;
+    }
 
-  html {
-    height: 100%
-  }
-  body {
-    height: 100%;
-    margin: 0;
-    padding: 0
-  }
+    html {
+        height: 100%;
+    }
 
-  .player {
-    -webkit-transform:translate3d(0,0,0);
-    z-index: 9999;
-  }
+    body {
+        height: 100%;
+        margin: 0;
+        padding: 0;
+    }
 
-  #map-canvas {
-    height: 100%;
-    z-index: 0001
-  }
+    .player {
+        -webkit-transform: translate3d(0,0,0);
+        z-index: 9999;
+    }
 
-  #search-form {
-    position: float;
-    bottom: 30px;
-    right: 25px;
-    z-index: 8999;
-    background: rgba(0,0,0,0.25);
-    padding: 0px;
-    height: 55px;
-    display: flex;
-    flex-wrap: wrap;
-    border-radius: 10px;
-    /*margin: 0 12 12 12;*/
-    /*min-width: 320px;*/
-  }
-  .search-bar {
-    padding: 5px 8px;
-    width: 233px;
-    border-radius: 10px;
-  }
+    #map-canvas {
+        height: 100%;
+        z-index: 0001;
+    }
 
-  .search-submit {
-    margin-left: 8px;
-    padding: 8px 13px;
-    background: #333;
-    color: white;
-    background-color: red;
-    font-size: 14px;
-    font-weight: bold;
-    border: solid black 2px;
-  }
+    #search-form {
+        position: float;
+        bottom: 30px;
+        right: 25px;
+        z-index: 8999;
+        background: rgba(0,0,0,0.25);
+        padding: 0px;
+        height: 55px;
+        display: flex;
+        flex-wrap: wrap;
+        border-radius: 10px;
+    }
 
+    .search-bar {
+        padding: 5px 8px;
+        width: 233px;
+        border-radius: 10px;
+    }
+
+    .search-submit {
+        margin-left: 8px;
+        padding: 8px 13px;
+        background: #333;
+        color: white;
+        background-color: red;
+        font-size: 14px;
+        font-weight: bold;
+        border: solid black 2px;
+    };
 }
-/*needs some work, but raw css for search background-repeat */
+
