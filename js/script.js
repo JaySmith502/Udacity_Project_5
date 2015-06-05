@@ -3,8 +3,8 @@
 //TODO: listview needs to center map on marker and open video on click COMPLETEDCOMPLETEDCOMPLETEDCOMPLETEDCOMPLETEDCOMPLETEDCOMPLETED
 //TODO: use Offline.js to handle internet disruptions COMPLETEDCOMPLETEDCOMPLETEDCOMPLETEDCOMPLETEDCOMPLETEDCOMPLETEDCOMPLETED
 //TODO: install Bootstrap framework and get responsiveness COMPLETEDCOMPLETEDCOMPLETEDCOMPLETEDCOMPLETEDCOMPLETEDCOMPLETEDCOMPLETED
-//TODO: run code through JSHint and check Javascript Style Guide (remove trailing white spaces and fix semicolons)
-//TODO: create error handler for Youtube API
+//TODO: run code through JSHint and check Javascript Style Guide (remove trailing white spaces and fix semicolons)COMPLETEDCOMPLETEDCOMPLETEDCOMPLETED
+//TODO: create error handler for Youtube API COMPLETEDCOMPLETEDCOMPLETEDCOMPLETEDCOMPLETEDCOMPLETEDCOMPLETEDCOMPLETEDCOMPLETEDCOMPLETEDCOMPLETED
 //TODO: address code review comments
 var markers = [{
     title: "Ramsi's on the World",
@@ -198,6 +198,9 @@ var ViewModel = function() {
                         infowindow.open(map, marker);
 
                     }); //closure for .getJSON
+                    .error(function() {
+                        alert("Oops, that video isn't available!")
+                    });
 
                 }; //closure for return function
             }(marker)); //closure for addListener
