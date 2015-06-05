@@ -1,14 +1,16 @@
-//TODO: get infowindows to work when list is filtered--RESOLVED
-//TODO: get infowindows to open on clicked marker instead of last marker in array--RESOLVED
-//TODO: work on responsiveness across browsers/devices (remove list for smaller/center search bar)--RESOLVED
-//TODO: Figure out how to close InfoWindows when another marker clicked
-//TODO: Get markers to respond when list item is clicked
-//list of places for markers to be iterated through to create markers on map.  Added "grub" and "pub" for functionality in future iterations to be searchable by food or drink
+//TODO LIST FOR FIRST REVIEW OF UDACITY INSTRUCTORS ITEMS THAT NEED TO BE ADDRESSED
+//TODO: infowindows need to only allow one open at a time COMPLETEDCOMPLETEDCOMPLETEDCOMPLETEDCOMPLETEDCOMPLETEDCOMPLETEDCOMPLETEDCOMPLETED
+//TODO: listview needs to center map on marker and open video on click COMPLETEDCOMPLETEDCOMPLETEDCOMPLETEDCOMPLETEDCOMPLETEDCOMPLETED
+//TODO: use Offline.js to handle internet disruptions COMPLETEDCOMPLETEDCOMPLETEDCOMPLETEDCOMPLETEDCOMPLETEDCOMPLETEDCOMPLETED
+//TODO: install Bootstrap framework and get responsiveness COMPLETEDCOMPLETEDCOMPLETEDCOMPLETEDCOMPLETEDCOMPLETEDCOMPLETEDCOMPLETED
+//TODO: run code through JSHint and check Javascript Style Guide (remove trailing white spaces and fix semicolons)
+//TODO: create error handler for Youtube API
+//TODO: address code review comments
 var markers = [{
-    title: "Ramsis on the World",
+    title: "Ramsi's on the World",
     lat: 38.235616,
     lng: -85.715553,
-    description: "grub",
+    description: "GRUB",
     marker: ''
 }, {
     title: "Molly Malone's",
@@ -87,7 +89,7 @@ var markers = [{
 var markerArray = [];
 var iconMain = 'images/marker.png';
 var iconHover = 'images/marker2.png';
-var center;
+var infowindow = new google.maps.InfoWindow({});
 
 //ViewModel for creation of the map object, encapsulates the entire js code and is called at end with the Knockout call.
 var ViewModel = function() {
@@ -144,9 +146,9 @@ var ViewModel = function() {
             google.maps.event.addListener(marker, 'click', function() {
                 var marker = this;
                 if (this.icon == iconHover) {
-                    this.setIcon(iconMain)
+                    this.setIcon(iconMain);
                 } else if (this.icon == iconMain) {
-                    this.setIcon(iconHover)
+                    this.setIcon(iconHover);
                 }
             });
 
@@ -163,44 +165,41 @@ var ViewModel = function() {
             //function credit to developers.google.com/maps/documentation/javascript/examples/marker-animations
             function toggleBounce() {
 
-            if (marker.getAnimation() != null) {
-            marker.setAnimation(null);
-            } else {
-            marker.setAnimation(google.maps.Animation.BOUNCE);
+                if (marker.getAnimation() !== null) {
+                    marker.setAnimation(null);
+                } else {
+                    marker.setAnimation(google.maps.Animation.BOUNCE);
                 }
             }
-
-            //google.maps.event.addListener(marker, 'click', toggleBounce(marker));
 
             //several attempts to take the getJSON and Youtube objects out of the marker addListener were fruitless, leaving it alone for this project
             google.maps.event.addListener(marker, "click", function(marker) {
                 var self = this;
 
                 return function() {
-                        //the actual url that is used in the JSON object to request info from the Youtube API, creates the specific marker request with this.title, pulling the title from
-                        //the marker list of the place being searched and inserting it into a generic Youtube video request, could be much more specific, but does work for purposes of this project
-                        var yt_url = 'https://www.googleapis.com/youtube/v3/search?part=id&q=' + this.title + '+louisville&maxResults=1&callback=?&key=AIzaSyActmR_LWyXc0Y9CxHucYh-C73C09Om318';
-                        //make some room for youtube ajax call and supporting code here.
-                        $.getJSON(yt_url, function(response) {
-                            //ensure something returns from Youtube
-                            console.log(response);
-                            //create the title for the youtube url from the API response
-                            var title = response.items[0].id.videoId;
-                            //create the infoWindow content using the Youtube iFrame Player object researched on Google Developers Console
-                            var contentString = '<div id="player">' + '<iframe width="320" height="200" src="https://www.youtube.com/embed/' + title + '" frameborder="0" allowfullscreen></iframe>' + '</div>';
-                            infowindow = new google.maps.InfoWindow({
-                                content: contentString
-                            });
-                            //var playerUrl = 'src="https://www.youtube.com/embed/' + title + '"';
-                            //$player.append(playerUrl);
+                    //the actual url that is used in the JSON object to request info from the Youtube API, creates the specific marker request with this.title, pulling the title from
+                    //the marker list of the place being searched and inserting it into a generic Youtube video request, could be much more specific, but does work for purposes of this project
+                    var yt_url = 'https://www.googleapis.com/youtube/v3/search?part=id&q=' + this.title + '+louisville&maxResults=1&callback=?&key=AIzaSyActmR_LWyXc0Y9CxHucYh-C73C09Om318';
+                    //make some room for youtube ajax call and supporting code here.
+                    $.getJSON(yt_url, function(response) {
+                        //ensure something returns from Youtube
+                        console.log(response);
+                        //create the title for the youtube url from the API response
+                        var title = response.items[0].id.videoId;
+                        //create the infoWindow content using the Youtube iFrame Player object researched on Google Developers Console
+                        var contentString = '<div id="player">' + '<iframe width="320" height="200" src="https://www.youtube.com/embed/' + title + '" frameborder="0" allowfullscreen></iframe>' + '</div>';
+                        //var playerUrl = 'src="https://www.youtube.com/embed/' + title + '"';
+                        //$player.append(playerUrl);
 
-                            infowindow.setContent(contentString);
-                            //center the map on the clicked marker
-                            map.panTo(marker.getPosition());
-                            infowindow.open(map, marker);
+                        infowindow.setContent(contentString);
+                        //center the map on the clicked marker
+                        map.panTo(marker.getPosition());
+                        //infowindow.close();
+                        infowindow.open(map, marker);
 
-                        }); //closure for .getJSON
-                    } //closure for return function
+                    }); //closure for .getJSON
+
+                }; //closure for return function
             }(marker)); //closure for addListener
 
         } //closure for for Loop setting Markers
@@ -227,10 +226,10 @@ var ViewModel = function() {
                 }
             }); //closuree for var newArray
         }); //closure for self.filteredArray.subscribe
-          //Highlight map marker if list item is clicked.
-            self.selectItem = function(listItem) {
+        //Highlight map marker if list item is clicked.
+        self.selectItem = function(listItem) {
             google.maps.event.trigger(listItem, 'click');
-            };
+        };
 
     }(); //closure for initMAP
 
