@@ -199,6 +199,8 @@ var ViewModel = function() {
                         //infowindow.close();
                         infowindow.open(map, marker);
 
+                    }).error(function(e){
+                        alert('Sorry, that resource is not available at this time :(');
                     }); //closure for .getJSON
                     /*.error(function() {
                         alert("Oops, that video isn't available!")
